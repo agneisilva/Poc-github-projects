@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="estudo de bootstrap">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Bootstrap tests</title>
+</head>
+
+<body>
+
+
+
+    <div class="container">
+
+        <div class="input-group mb-3">
+            <input id="usergithub" type="text" class="form-control" placeholder="username github"
+                aria-label="username github" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button onclick="pesquisar()" class="btn btn-outline-secondary" type="button">Pesquisar</button>
+            </div>
+        </div>
+
+        <div id="projects">
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="./api.js"></script>
+    <script src="./util.js"></script>
+
+    <script>
+
+        function pesquisar() {
+            var user = $("#usergithub").val();
+
+            clearProject();
+
+            getReposGithub(user,
+                (data) => {
+                    console.log(`[ ${formatDateTime(new Date())} ] Success >>>>> ${data.length}`);
+
+                    plotProject(data, $("#projects"))
+                },
+                (err) => {
+                    console.log(`[ ${formatDateTime(new Date())} ] Error >>>>> ${JSON.stringify(err)}`);
+                });
+
+        }
+
+        function plotProject(projects, div) {
+
+
+            projects.forEach(project => {
+                var projectDom = `<div class="row">
+                                    <div class="col-md-4">
+                                        <a href="${project.html_url}" target="_blank">${project.name}</a>
+                                    </div>
+                                    <div class="col-md-8">
+                                        ${project.description}
+                                    </div>
+                                  </div>`;
+                div.append(projectDom);
+            });
+        }
+
+        function clearProject(div) {
+            $("#projects").empty();
+        }
+
+    </script>
+</body>
+
+</html>
