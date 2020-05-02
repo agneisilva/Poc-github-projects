@@ -33,6 +33,25 @@
         </div>
     </div>
 
+    <div class="modal fade" id="erromodal" tabindex="-1" role="dialog" aria-labelledby="erromodal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ocorreu um erro</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="errormsg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.5.0.min.js"
         integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
@@ -63,6 +82,7 @@
                 },
                 (err) => {
                     console.log(`[ ${formatDateTime(new Date())} ] Error >>>>> ${JSON.stringify(err)}`);
+                    showError(err);
                     displayLoad(false);
                 });
 
@@ -97,6 +117,18 @@
         function clearProject() {
             $("#projects").empty();
             $("#total").empty();
+        }
+
+
+        function showError(err) {
+            let text = "Ocorreu um erro!";
+
+            if (!!err) {
+                text = (!!err.responseJSON) ? err.responseJSON.message : text;
+            }
+
+            $(" #errormsg").append(text);
+            $('#erromodal').modal('show');
         }
 
 
