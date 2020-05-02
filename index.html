@@ -11,12 +11,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="./style.css">
     <title>Bootstrap tests</title>
 </head>
 
 <body>
-
-
 
     <div class="container">
 
@@ -24,12 +23,13 @@
             <input id="usergithub" type="text" class="form-control" placeholder="username github"
                 aria-label="username github" aria-describedby="basic-addon2">
             <div class="input-group-append">
-                <button onclick="pesquisar()" class="btn btn-outline-secondary" type="button">Pesquisar</button>
+                <button id="btnpesquisar" onclick="pesquisar()" class="btn btn-outline-secondary"
+                    type="default">Pesquisar</button>
             </div>
         </div>
 
+        <div id="total"></div>
         <div id="projects">
-
         </div>
     </div>
 
@@ -50,15 +50,20 @@
             var user = $("#usergithub").val();
 
             clearProject();
+            displayLoad(true);
 
             getReposGithub(user,
                 (data) => {
                     console.log(`[ ${formatDateTime(new Date())} ] Success >>>>> ${data.length}`);
 
-                    plotProject(data, $("#projects"))
+
+                    $("#total").append("<h4>" + data.length + " projetos </h4>");
+                    plotProject(data, $("#projects"));
+                    displayLoad(false);
                 },
                 (err) => {
                     console.log(`[ ${formatDateTime(new Date())} ] Error >>>>> ${JSON.stringify(err)}`);
+                    displayLoad(false);
                 });
 
         }
@@ -79,10 +84,31 @@
             });
         }
 
-        function clearProject(div) {
-            $("#projects").empty();
+        function displayLoad(display) {
+            if (display) {
+                $("#projects").addClass("dot-collision");
+            }
+            else {
+                $("#projects").removeClass("dot-collision")
+            }
+
         }
 
+        function clearProject() {
+            $("#projects").empty();
+            $("#total").empty();
+        }
+
+
+        $(() => {
+            var input = $("#usergithub");
+            input.keyup(function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    $("#btnpesquisar").click();
+                }
+            });
+        });
     </script>
 </body>
 
